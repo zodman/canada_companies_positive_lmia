@@ -1,0 +1,29 @@
+init:
+    rm -f  *.csv
+    wget "https://open.canada.ca/data/api/action/package_show?id=90fed587-1364-4f33-a9ee-208181dc0b97" -c -O out.json
+
+start:
+    cat out.json  | jq ".result.resources[].url" | grep -v "/Positive_Employers_EN.csv" | grep EN  | xargs wget -c
+    sed -i 1d *.csv
+    sed -i 1d 2015_Positive_Employers_EN.csv
+    for f in *EN.csv
+    do
+        python3 fillempty.py $f
+    done
+concat:
+    declare -a FILES=`find . -iname '*.processed.csv' | xargs`
+    red "merging files"
+    rows csv-merge ${FILES} all.csv
+    red "obtain schema"
+    rows schema all.csv
+replacestr:
+    sed -i s/occupations_under_noc_2011/occupations/g *.processed.csv
+    sed -i s/approved_positions/positions_approved/g *.processed.csv
+    sed -i s/occupaitons_under_noc_2012/occupations/g *.processed.csv
+    sed -i s/,occupation,/,occupations,/g *.processed.csv
+    sed -i s/program_stream/stream/g *.processed.csv
+
+globalstream:
+    SQL="select * from table1 where stream like '%Global%'"
+    rows query "${SQL}" all.csv --output global_stream.csv
+    
