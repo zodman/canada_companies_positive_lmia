@@ -15,6 +15,7 @@ start:
     red "Remove shit"
     sed -i 1d *.csv
     sed -i 1d 2015_Positive_Employers_EN.csv
+fillempty:
     red "Fill empty columns"
     for f in *EN.csv
     do
@@ -27,6 +28,9 @@ concat:
     rows csv-merge ${FILES} all.csv
     red "obtain schema"
     rows schema all.csv
+    rows csv-to-sqlite all.csv all.db
+    rows csv-row-count all.csv
+
 replacestr:
     red "Replace heads"
     sed -i s/occupations_under_noc_2011/occupations/g *.processed.csv
@@ -42,7 +46,7 @@ globalstream:
     SQL="select * from table1 where stream like '%Global%'"
     rows query "${SQL}" all.csv --output global_stream.csv
     
-all: start replacestr concat globalstream
+all: start fillempty replacestr concat globalstream 
 
 
 reduce:
@@ -55,3 +59,13 @@ reduce:
     SQL+=" lower(occupations) like '%soft%' )"
     rows query "${SQL}" global_stream.csv --output reduced_global_stream.csv
     rows query "select address,occupations from table1" reduced_global_stream.csv
+fil:
+    rows query "select distinct(employer) as e from table1 order by e desc " reduced_global_stream.csv  --output filtered.csv
+    sed -i s/Inc.//g filtered.csv
+    sed -i s/inc.//g filtered.csv
+    sed -i s/\\.//g filtered.csv
+    sed -i s/Ltd//g filtered.csv
+    sed -i s/\\\"//g filtered.csv
+    sed -i s/Technology//g filtered.csv
+    sed -i s/Technologie//g filtered.csv
+    cat filtered.csv

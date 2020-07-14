@@ -14,6 +14,11 @@ for r in results[:DELETE_LINES]:
     obj = r._asdict()
     phase = filename.lower()
     phase = phase.replace("_positive_en.csv", "")
+    phase = phase.replace("_positive_employer_en.csv", "")
+    phase = phase.replace("_positive_employer_stream_en.csv", "")
+    phase = phase.replace("_employer", "")
+    phase = phase.replace("_positives_en", "")
+    print(phase)
     for k, v in obj.items():
         if v == '':
             obj[k] = old_obj[k]
