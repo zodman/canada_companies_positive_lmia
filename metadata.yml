@@ -1,11 +1,15 @@
 title: "Temporary Foreign Worker Program (TFWP): Positive Labour Market Impact Assessment (LMIA) Employers List"
+license_url: "http://open.canada.ca/en/open-government-licence-canada"
 source_url: https://open.canada.ca/data/en/dataset/90fed587-1364-4f33-a9ee-208181dc0b97
 description_html: |
 
   <p> List of canadian companies who own's a LMIA Positive </p>
   <iframe width="560" height="315" src="https://www.youtube.com/embed/a87H4XbsZu8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
   <br>
+    <p>Here is the list of all companies what sponsor with GST stream from 2015 to 2020.
+  <b>
   <b> scrapped and processed by <a href="https://www.linkedin.com/zodman/">zodman</a> (hired me plz!)</b>
+  <p> the Video is cortesy of <a href="https://app.visto.ai/register?ref=1046">Visto.ai</a>
 
 databases:
   all:
