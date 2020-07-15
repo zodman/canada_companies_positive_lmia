@@ -1,0 +1,18 @@
+title: "Temporary Foreign Worker Program (TFWP): Positive Labour Market Impact Assessment (LMIA) Employers List"
+source_url: https://open.canada.ca/data/en/dataset/90fed587-1364-4f33-a9ee-208181dc0b97
+description_html: |
+
+  <p> List of canadian companies who own's a LMIA Positive </p>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/a87H4XbsZu8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <br>
+  <b> scrapped and processed by <a href="https://www.linkedin.com/zodman/">zodman</a> (hired me plz!)</b>
+
+databases:
+  all:
+    title: "All companies"
+  global_stram:
+    title: "Companies had been using Global Stream Talent"
+  reduced_global_stream:
+    title: "Companies filtere outside vancouver, quebec, toronto, montreal"
+  reduced_global_stream.csv.joburl:
+    title: "Companies and jobs in JobBank"
