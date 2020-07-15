@@ -28,8 +28,14 @@ concat:
     rows csv-merge ${FILES} all.csv
     red "obtain schema"
     rows schema all.csv
+
+convert:
     rows csv-to-sqlite all.csv all.db
-    rows csv-row-count all.csv
+    sqlite-utils enable-fts all.db all employer occupations address  phase  province_territory  stream
+    rows csv-to-sqlite global_stream.csv global_stream.db
+    rows csv-to-sqlite reduced_global_stream.csv reduced_global_stream.db
+
+
 
 replacestr:
     red "Replace heads"

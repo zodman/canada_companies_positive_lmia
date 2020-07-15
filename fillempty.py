@@ -1,5 +1,4 @@
 import sys
-import tqdm
 import rows
 
 filename = sys.argv[1]
