@@ -14,6 +14,23 @@ description_html: |
 databases:
   all:
     title: "All companies"
+    queries:
+      Employer_global_skill_computatio:
+        sql: |
+          select
+                employer,
+                province_territory,
+                sum(positions_approved) as c
+              from
+                [all]
+              where
+                stream like '%lobal%'
+                and occupations like '%Compu%'
+              group by
+                employer
+              having c > 10
+              order by
+                c desc
   global_stram:
     title: "Companies had been using Global Stream Talent"
   reduced_global_stream:
