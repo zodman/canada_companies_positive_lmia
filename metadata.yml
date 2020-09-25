@@ -13,9 +13,65 @@ description_html: |
 
 databases:
   all:
+    tables:
+      all:
+        sort_desc: "phase"
     title: "All companies"
     queries:
-      Employer_global_skill_computatio:
+      #jobbank_link:
+        #sql: |
+          #select e, 
+            #json_object(
+              #"href",
+                #'https://www.jobbank.gc.ca/jobsearch/jobsearch?empl=' || e, 
+              #'label',
+                #"jobbank"
+              #) as jobbank
+            #from ( select distinct(employer) as e
+            #from [all]
+            #where  
+            #lower(address) not like '%toronto%' and 
+            #lower(address) not like '%qu%bec%' and 
+            #lower(address) not like '%montr%al%' and 
+            #lower(address) not like '%vancouver%' 
+            #) order by e
+      More_demanded_occupations_by_providence:
+        sql: |
+          select
+           sum(positions_approved),
+            occupations,
+             province_territory
+             from
+               [all]
+               where 
+               phase like '2020Q%'  
+               group by occupations, province_territory
+               having sum(positions_approved) > 100
+               order by
+                 province_territory,positions_approved desc
+      LMIA_computation_smallplaces:
+        sql: |
+          select * from [all] 
+            where ( 
+            lower(address) not like '%toronto%' and 
+            lower(address) not like '%qu%bec%' and 
+            lower(address) not like '%montr%al%' and 
+            lower(address) not like '%vancouver%' 
+            ) and 
+            ( 
+              lower(occupations) like '%comp%' or 
+              lower(occupations) like '%soft%' 
+            )
+      LMIA_smallplaces:
+        sql: |
+          select * from [all] 
+            where ( 
+            lower(address) not like '%toronto%' and 
+            lower(address) not like '%qu%bec%' and 
+            lower(address) not like '%montr%al%' and 
+            lower(address) not like '%vancouver%' 
+            )  
+      Employer_global_skill_computation:
         sql: |
           select
                 employer,
@@ -28,12 +84,5 @@ databases:
                 and occupations like '%Compu%'
               group by
                 employer
-              having c > 10
               order by
                 c desc
-  global_stram:
-    title: "Companies had been using Global Stream Talent"
-  reduced_global_stream:
-    title: "Companies filtere outside vancouver, quebec, toronto, montreal"
-  reduced_global_stream.csv.joburl:
-    title: "Companies and jobs in JobBank"

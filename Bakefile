@@ -4,12 +4,12 @@ init:
 start:
     rm -f  *.csv
     declare -a FILES=`cat out.json  | jq -r ".result.resources[].url" | grep -v "/Positive_Employers_EN.csv" | grep EN` 
-    for f in ${FILES} 
-    do
+    for f in ${FILES}; do
         red " "
         red  " Download $f"
-        wget --no-hsts -q --show-progress $f
+        wget -c --no-hsts -q --show-progress $f
     done
+    xlsx2csv TFWP_2020Q2_Positive_EN.xlsx > TFWP_2020Q2_Positive_EN.csv
     red " "
     red "Remove shit"
     sed -i 1d *.csv
@@ -17,11 +17,11 @@ start:
 
 fillempty:
     red "Fill empty columns"
-    for f in *EN.csv
-    do
+    for f in *EN.csv; do
         red "Proccessing $f"
         python3 fillempty.py $f
     done
+
 concat:
     declare -a FILES=`find . -iname '*.processed.csv' | xargs`
     red "merging files"
@@ -30,17 +30,19 @@ concat:
     rows schema all.csv
 
 convert:
-    rows csv-to-sqlite all.csv all.db
+    rm *.db
+    rows csv-to-sqlite all.csv all.db 
     sqlite-utils enable-fts --fts4 all.db all employer occupations address  phase  province_territory  stream
     rows csv-to-sqlite global_stream.csv global_stream.db
     rows csv-to-sqlite reduced_global_stream.csv reduced_global_stream.db
-
-
+#    rows csv-to-sqlite reduced_global_stream.csv.loc.csv reduced_global_stream.csv.loc.db
+#   rows csv-to-sqlite reduced_global_stream.csv.joburl.csv reduced_global_stream.csv.joburl.db
 
 replacestr:
     red "Replace heads"
     sed -i s/occupations_under_noc_2011/occupations/g *.processed.csv
     sed -i s/approved_positions/positions_approved/g *.processed.csv
+    sed -i s/employer_name/employer/g *.processed.csv
     red "Replace head ocupations"
     sed -i s/occupaitons_under_noc_2012/occupations/g *.processed.csv
     sed -i s/occupaitons_under_noc_2011/occupations/g *.processed.csv
@@ -50,10 +52,7 @@ replacestr:
 
 globalstream:
     SQL="select * from table1 where stream like '%Global%'"
-    rows query "${SQL}" all.csv --output global_stream.csv
-    
-all: start fillempty replacestr concat globalstream 
-
+    rows query "${SQL}" all.csv --output global_stream.csv --samples 0
 
 reduce:
     SQL=" select * from table1 where"
@@ -63,6 +62,7 @@ reduce:
     SQL+=" lower(address) not like '%vancouver%' ) and "
     SQL+=" ( lower(occupations) like '%comp%' or"
     SQL+=" lower(occupations) like '%soft%' )"
+	echo ${SQL}
     rows query "${SQL}" global_stream.csv --output reduced_global_stream.csv
     rows query "select address,occupations from table1" reduced_global_stream.csv
 fil:
@@ -74,7 +74,10 @@ fil:
     sed -i s/\\\"//g filtered.csv
     sed -i s/Technology//g filtered.csv
     sed -i s/Technologie//g filtered.csv
-    cat filtered.csv
+
+all: fillempty replacestr concat globalstream  reduce fil convert
+complete: init start all
+
 upload:
     rsync --progress -v *.db *.yml python3.ninja:apps/canada/
 deploy: upload
