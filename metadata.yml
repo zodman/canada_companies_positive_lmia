@@ -17,6 +17,23 @@ databases:
       all:
         sort_desc: "phase"
     queries:
+      Search_Companies_with_lmias:
+        title: "Search companies with LMIAS"
+        description: "if you don't know your NOC, you can find out in: https://clmi-explore-icmt.ca/viz?page=occupations&lang=en"
+        sql: |
+          select
+            employer,  
+            sum(positions_approved) as approved,
+            occupations,
+            province_territory
+          from
+            [all]
+          where
+            occupations like :noc || '%'
+          group by occupations, employer, province_territory
+            order by
+          approved desc, province_territory
+
       Companies_with_more_LMIAS_2020:
         sql: |
           select
