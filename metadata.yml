@@ -16,29 +16,39 @@ databases:
     tables:
       all:
         sort_desc: "phase"
-    title: "All companies"
     queries:
-      #jobbank_link:
-        #sql: |
-          #select e, 
-            #json_object(
-              #"href",
-                #'https://www.jobbank.gc.ca/jobsearch/jobsearch?empl=' || e, 
-              #'label',
-                #"jobbank"
-              #) as jobbank
-            #from ( select distinct(employer) as e
-            #from [all]
-            #where  
-            #lower(address) not like '%toronto%' and 
-            #lower(address) not like '%qu%bec%' and 
-            #lower(address) not like '%montr%al%' and 
-            #lower(address) not like '%vancouver%' 
-            #) order by e
-      More_demanded_occupations_by_providence:
+      Companies_with_more_LMIAS_2020:
         sql: |
           select
-           sum(positions_approved),
+            employer,  
+            sum(positions_approved) as approved,
+            occupations,
+            province_territory
+          from
+            [all]
+          where
+            phase like '2020Q%'
+          group by occupations, employer, province_territory
+            order by
+          approved desc
+      More_demanded_occupation_2020:
+        sql: | 
+          select
+           sum(positions_approved) approved,
+            occupations
+             from
+               [all]
+               where
+               phase like '2020Q%'  
+               group by occupations
+               having sum(positions_approved) > 100
+               order by
+                 approved desc
+                 limit 20
+      More_demanded_occupations_by_providence_2020:
+        sql: |
+          select
+           sum(positions_approved) approved,
             occupations,
              province_territory
              from
@@ -48,7 +58,7 @@ databases:
                group by occupations, province_territory
                having sum(positions_approved) > 100
                order by
-                 province_territory,positions_approved desc
+                 province_territory,approved desc
       LMIA_computation_smallplaces:
         sql: |
           select * from [all] 
