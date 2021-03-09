@@ -12,8 +12,8 @@ start:
     xlsx2csv TFWP_2020Q2_Positive_EN.xlsx > TFWP_2020Q2_Positive_EN.csv
     red " "
     red "Remove shit"
-    sed -i 1d *.csv
-    sed -i 1d 2015_Positive_Employers_EN.csv
+    sed -i.orig 1d *.csv
+    sed -i.orig 1d 2015_Positive_Employers_EN.csv
 
 fillempty:
     red "Fill empty columns"

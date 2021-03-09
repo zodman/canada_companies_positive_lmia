@@ -4,4 +4,6 @@ datasette-pretty-json
 datasette-saved-queries
 datasette-vega
 bake-cli
-
+xlsx2csv
+rows
+tqdm
