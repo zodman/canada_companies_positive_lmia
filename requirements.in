@@ -7,3 +7,5 @@ bake-cli
 xlsx2csv
 rows
 tqdm
+requests
+requests-cache
