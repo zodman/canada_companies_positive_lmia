@@ -2,14 +2,16 @@ init:
     wget "https://open.canada.ca/data/api/action/package_show?id=90fed587-1364-4f33-a9ee-208181dc0b97" --no-hsts -c -O out.json
 
 start:
-    rm -f  *.csv
+    # rm -f  *.csv
     declare -a FILES=`cat out.json  | jq -r ".result.resources[].url" | grep -v "/Positive_Employers_EN.csv" | grep EN` 
     for f in ${FILES}; do
         red " "
         red  " Download $f"
-        wget -c --no-hsts -q --show-progress $f
+        wget -nc --no-hsts --show-progress $f
     done
-    xlsx2csv TFWP_2020Q2_Positive_EN.xlsx > TFWP_2020Q2_Positive_EN.csv
+    for f  in *.xlsx; do
+        xlsx2csv $f > $f.csv
+    done
     red " "
     red "Remove shit"
     sed -i.orig.orig 1d *.csv
@@ -78,7 +80,7 @@ fil:
 all: fillempty replacestr concat globalstream  reduce fil convert
 complete: init start all
 
-upload:
+upload: @interactive
     rsync --progress -v *.db *.yml python3.ninja:apps/canada/
-deploy: upload
+deploy: upload @interactive
     ssh zodman@python3.ninja sudo supervisorctl restart canada

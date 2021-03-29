@@ -5,7 +5,7 @@ datasette-saved-queries
 datasette-vega
 bake-cli
 xlsx2csv
-rows
 tqdm
 requests
 requests-cache
+https://github.com/turicas/rows/archive/refs/heads/develop.zip
