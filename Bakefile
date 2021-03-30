@@ -10,7 +10,7 @@ start:
         wget -nc --no-hsts --show-progress $f
     done
     for f  in *.xlsx; do
-        xlsx2csv $f > $f.csv
+        xlsx2csv $f > "${f%.xlsx}.csv"
     done
     red " "
     red "Remove shit"
@@ -19,6 +19,7 @@ start:
 
 fillempty:
     red "Fill empty columns"
+
     for f in *EN.csv; do
         red "Proccessing $f"
         python3 fillempty.py $f

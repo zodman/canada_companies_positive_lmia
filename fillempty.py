@@ -40,7 +40,16 @@ for r in tqdm.tqdm(results[:DELETE_LINES]):
     for k, v in obj.items():
         if v == '':
             obj[k] = old_obj[k]
-    obj.update({'phase': phase})
+    postal_code = "N/A"
+    city ="N/A"
+    if 'address' in obj:
+        tmp_postal_code = "".join(obj["address"].split(" ")[-2:])
+        if len(tmp_postal_code) <=6:
+            postal_code = tmp_postal_code
+        city = obj["address"].split(",")[0]
+
+#    tqdm.tqdm.write(postal_code)
+    obj.update({'phase': phase, 'zipcode': postal_code, 'city': city})
     new_results.append(obj)
     old_obj = obj.copy()
 
