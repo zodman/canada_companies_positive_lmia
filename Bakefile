@@ -1,8 +1,9 @@
 init:
     wget "https://open.canada.ca/data/api/action/package_show?id=90fed587-1364-4f33-a9ee-208181dc0b97" --no-hsts -c -O out.json
+    rows convert "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/eligibility/find-national-occupation-code.html" noc.csv
 
 start:
-    # rm -f  *.csv
+    rm -f  *.csv
     declare -a FILES=`cat out.json  | jq -r ".result.resources[].url" | grep -v "/Positive_Employers_EN.csv" | grep EN` 
     for f in ${FILES}; do
         red " "
@@ -18,6 +19,7 @@ start:
     sed -i.orig.orig 1d 2015_Positive_Employers_EN.csv
 
 fillempty:
+    set -e
     red "Fill empty columns"
 
     for f in *EN.csv; do
@@ -32,8 +34,10 @@ concat:
     red "obtain schema"
     rows schema all.csv
 
+
 convert:
-    rm *.db
+    rm -rf *.db
+    red "Finish step, generating db files"
     rows csv-to-sqlite all.csv all.db 
     sqlite-utils enable-fts --fts4 all.db all employer occupations address  phase  province_territory  stream
     rows csv-to-sqlite global_stream.csv global_stream.db
@@ -79,7 +83,14 @@ fil:
     sed -i.orig s/Technologie//g filtered.csv
 
 all: fillempty replacestr concat globalstream  reduce fil convert
-complete: init start all
+complete: clean init start all
+
+clean:
+    rm -rf *.csv
+    rm -rf *.json
+    rm -rf *.orig
+    rm -rf *.xlsx
+
 
 upload: @interactive
     rsync --progress -v *.db *.yml python3.ninja:apps/canada/
