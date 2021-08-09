@@ -59,13 +59,20 @@ for r in tqdm.tqdm(results[:DELETE_LINES]):
         # city = city.decode("utf-8")
         # if "montr" in city.lower():
             # assert False, (city.encode("utf-8"),)
-
+    employer="Noname"
+    if 'employer' in  obj:
+        employer = str_dec(obj["employer"])
+    if 'employer_name' in obj:
+        employer = str_dec(obj["employer_name"])
+        del obj["employer_name"]
 
     idhash=hashlib.md5(json.dumps(obj, sort_keys=True).encode("utf-8")).hexdigest()
 #    tqdm.tqdm.write(postal_code)
     #if "montr" in city.lower():
     #    tqdm.tqdm.write("{}".format(city))
-    obj.update({'hashid': idhash, 'phase': phase, 'zipcode': postal_code, 'city': city, 'address':address})
+    obj.update({'hashid': idhash, 'phase': phase, 'zipcode': postal_code, 
+                'employer': employer,
+                'city': city, 'address':address})
     new_results.append(obj)
     old_obj = obj.copy()
 
