@@ -24,7 +24,7 @@ databases:
         sort_desc: "phase"
     queries:
       Search_Companies_with_lmias:
-        title: "Search companies with LMIAS"
+        title: "Search companies by noc"
         description: "if you don't know your NOC, you can find out in: https://clmi-explore-icmt.ca/viz?page=occupations&lang=en"
         sql: |
           select
@@ -35,12 +35,12 @@ databases:
           from
             [all]
           where
-            occupations like :noc || '%'
+            lower(occupations) like lower('%' || :noc || '%')
           group by occupations, employer, province_territory
             order by
           approved desc, province_territory
 
-      Companies_with_more_LMIAS_2020:
+      Companies_with_more_LMIAS_this_year:
         sql: |
           select
             employer,  
@@ -50,11 +50,11 @@ databases:
           from
             [all]
           where
-            phase like '2020Q%'
+            phase like strftime('%YQ%%', 'now')
           group by occupations, employer, province_territory
             order by
           approved desc
-      More_demanded_occupation_2020:
+      More_demanded_occupation_this_year:
         sql: | 
           select
            sum(positions_approved) approved,
@@ -62,13 +62,13 @@ databases:
              from
                [all]
                where
-               phase like '2020Q%'  
+               phase like strftime('%YQ%%', 'now')
                group by occupations
                having sum(positions_approved) > 100
                order by
                  approved desc
                  limit 20
-      More_demanded_occupations_by_providence_2020:
+      More_demanded_occupations_by_providence_this_year:
         sql: |
           select
            sum(positions_approved) approved,
@@ -77,7 +77,7 @@ databases:
              from
                [all]
                where 
-               phase like '2020Q%'  
+               phase like  strftime('%YQ%%', 'now')
                group by occupations, province_territory
                having sum(positions_approved) > 100
                order by
