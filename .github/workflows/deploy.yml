@@ -21,7 +21,6 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - run: pip install bake-cli
+          pip install -r requirements.in
       - run: bake ee/download
       - run: bake upload
