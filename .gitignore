@@ -1,5 +1,6 @@
 *.csv
 *.json
 *.orig
+.venv
 .env
 *.xlsx
