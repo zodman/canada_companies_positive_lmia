@@ -50,6 +50,7 @@ for r in tqdm.tqdm(results[:DELETE_LINES]):
             obj[k] = old_obj[k]
     postal_code = "N/A"
     city ="N/A"
+    address=''
     if 'address' in obj:
         address = str_dec(obj["address"])
         tmp_postal_code = "".join(address.split(" ")[-2:])
@@ -70,7 +71,8 @@ for r in tqdm.tqdm(results[:DELETE_LINES]):
 #    tqdm.tqdm.write(postal_code)
     #if "montr" in city.lower():
     #    tqdm.tqdm.write("{}".format(city))
-    obj.update({'hashid': idhash, 'phase': phase, 'zipcode': postal_code, 
+    obj.update({
+        'phase': phase, 'zipcode': postal_code, 
                 'employer': employer,
                 'city': city, 'address':address})
     new_results.append(obj)
