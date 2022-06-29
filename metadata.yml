@@ -38,7 +38,7 @@ databases:
             order by
           approved desc, province_territory
 
-      Companies_with_more_LMIAS_this_year:
+      Companies_with_more_LMIAS_2021:
         sql: |
           select
             employer,  
@@ -48,11 +48,11 @@ databases:
           from
             [all]
           where
-            phase like strftime('%YQ%%', 'now')
+            phase like '%2021%'
           group by occupations, employer, province_territory
             order by
           approved desc
-      More_demanded_occupation_this_year:
+      More_demanded_occupation_2021:
         sql: | 
           select
            sum(positions_approved) approved,
@@ -60,13 +60,13 @@ databases:
              from
                [all]
                where
-               phase like strftime('%YQ%%', 'now')
+               phase like '%2021%'
                group by occupations
                having sum(positions_approved) > 100
                order by
                  approved desc
                  limit 20
-      More_demanded_occupations_by_providence_this_year:
+      More_demanded_occupations_by_providence_2021:
         sql: |
           select
            sum(positions_approved) approved,
@@ -75,7 +75,7 @@ databases:
              from
                [all]
                where 
-               phase like  strftime('%YQ%%', 'now')
+               phase like  '%2021%'
                group by occupations, province_territory
                having sum(positions_approved) > 100
                order by

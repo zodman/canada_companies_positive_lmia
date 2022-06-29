@@ -23,7 +23,10 @@ start:
 
 fillempty:
     set -xe
+    rm -f 2015_positive_employers_en.csv*
+    rm -f positive_employers_en.csv
     red "Fill empty columns"
+
 
     for f in *[^processed].csv; do
         red "Proccessing $f"
@@ -35,7 +38,9 @@ concat:
     rm -rf all.processed.csv
     declare -a FILES=`find . -iname '*.processed.csv' | xargs`
     red "merging files"
-    rows csv-merge ${FILES} all.processed.csv
+    rows csv-merge ${FILES} pre-all.processed.csv
+    rows query "select province_territory, employer, address, occupations,positions_approved,phase,zipcode, city,stream from table1" pre-all.processed.csv --output all.processed.csv
+    rm pre-all.processed.csv
     red "obtain schema"
     rows schema all.processed.csv
 
@@ -56,7 +61,6 @@ replacestr:
     sed -i.orig s/approved_positions/positions_approved/g *.processed.csv
     sed -i.orig s/employer_name/employer/g *.processed.csv
     sed -i.origin s/newfoundland_and_labrador/employer/g *.processed.csv
-    sed -i.origin s/approved_lmias/positions_approved/g *.processed.csv
 
     red "Replace head ocupations"
     sed -i.orig s/occupaitons_under_noc_2012/occupations/g *.processed.csv
@@ -112,4 +116,18 @@ deploy: upload @interactive
 ee:
     rows convert https://www.canada.ca/en/immigration-refugees-citizenship/corporate/mandate/policies-operational-instructions-agreements/ministerial-instructions/express-entry-rounds.html  express_entry_draws.db
     rows schema express_entry_draws.db
+
+atlantic:
+    set -e
+    rows convert https://www.gov.nl.ca/immigration/immigrating-to-newfoundland-and-labrador/atlantic-immigration-pilot-program/designated-employers/  \
+        atlantic-n-and-l.processed.csv
+    #rows pdf-to-text https://novascotiaimmigration.com/wp-content/uploads/Designated_AIP_employers.pdf novascotia.pre.csv
+    tail -n 259 novascotia.pre.csv > novascotia.pre1.csv
+    awk 'NF' novascotia.pre1.csv > novascotia.pre2.csv
+    sed -i s/,//g novascotia.pre2.csv
+    sed -i '1s/^/company_name\n/' novascotia.pre2.csv
+    rows convert novascotia.pre2.csv novascotia.processed.csv
+    rows schema novascotia.processed.csv
+    rows csv-to-sqlite novascotia.processed.csv novascotia-designed-employers.db
+    rows csv-to-sqlite atlantic-n-and-l.processed.csv atlantic-n-and-l-designed-employers.db
 
