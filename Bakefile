@@ -114,8 +114,10 @@ deploy: upload @interactive
     ssh zodman@python3.ninja sudo supervisorctl restart canada
 
 ee:
-    rows convert https://www.canada.ca/en/immigration-refugees-citizenship/corporate/mandate/policies-operational-instructions-agreements/ministerial-instructions/express-entry-rounds.html  express_entry_draws.db
-    rows schema express_entry_draws.db
+    set -e
+    rm -f express_entry_draws.*
+    rows convert https://www.canada.ca/en/immigration-refugees-citizenship/corporate/mandate/policies-operational-instructions-agreements/ministerial-instructions/express-entry-rounds.html  express_entry_draws.csv
+    rows  csv-to-sqlite express_entry_draws.csv  express_entry_draws.db
 
 atlantic:
     set -e
