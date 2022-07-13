@@ -18,7 +18,7 @@ jobs:
         with:
           SSHKEY: ${{ secrets.SSH_KEY }}
           ORIGIN: python3.ninja
-      - run: ssh -T git@github.com || true
+          USER: zodman
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
