@@ -8,4 +8,4 @@ xlsx2csv
 tqdm
 requests
 requests-cache
-https://github.com/turicas/rows/archive/refs/heads/develop.zip
+rows[all]
