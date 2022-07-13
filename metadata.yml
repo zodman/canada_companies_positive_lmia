@@ -15,6 +15,21 @@ description_html: |
   <a href="https://app.visto.ai/register?ref=1046"><img style="height:50px" src="https://i.imgur.com/1hYwGyu.png"></a>
 
 databases:
+  
+  novascotia-designed-employers:
+    title: Atlantic Immigration Program Designated Employers
+    source_url: https://novascotiaimmigration.com/wp-content/uploads/Designated_AIP_employers.pdf
+    tables:
+      novascotia:
+        title: Atlantic Immigration Program Designated Employers Novascotia
+        source_url: https://novascotiaimmigration.com/wp-content/uploads/Designated_AIP_employers.pdf
+  atlantic-n-and-l-designed-employers:
+    source_url: https://www.gov.nl.ca/immigration/immigrating-to-newfoundland-and-labrador/atlantic-immigration-pilot-program/designated-employers/
+    title: Designed Employeers in Newfoundland and labrador
+    tables:
+      atlantic_n_and_l:
+        source_url: https://www.gov.nl.ca/immigration/immigrating-to-newfoundland-and-labrador/atlantic-immigration-pilot-program/designated-employers/
+        title: Designed Employeers in Newfoundland and labrador
   all:
     tables:
       all:

@@ -130,4 +130,5 @@ atlantic:
     rows schema novascotia.processed.csv
     rows csv-to-sqlite novascotia.processed.csv novascotia-designed-employers.db
     rows csv-to-sqlite atlantic-n-and-l.processed.csv atlantic-n-and-l-designed-employers.db
+    #$ curl https://www.princeedwardisland.ca/en/information/office-of-immigration/atlantic-immigration-program-designated-employers 
 
