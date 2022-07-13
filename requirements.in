@@ -3,7 +3,7 @@ datasette-cluster-map
 datasette-pretty-json
 datasette-saved-queries
 datasette-vega
-bake-cli
+https://github.com/kennethreitz/bake/archive/refs/heads/master.zip
 xlsx2csv
 tqdm
 requests
