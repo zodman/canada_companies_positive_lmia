@@ -14,7 +14,7 @@ jobs:
         with:
           python-version: '3.8.x'
       - name: Install SSH Key
-        uses: LuisEnMarroquin/setup-ssh-action@v2.0.0
+        uses: zodman/setup-ssh-action@v2.0.1
         with:
           SSHKEY: ${{ secrets.SSH_KEY }}
           ORIGIN: 178.62.7.89
