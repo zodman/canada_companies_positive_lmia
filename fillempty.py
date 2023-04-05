@@ -18,21 +18,9 @@ old_obj = {}
 
 
 def get_phase(f):
-    r = [
-        "_Positive_Employers_EN.csv",
-        "_Positive_Employer_EN.csv",
-        "_Positive_EN.csv",
-        "_Positive_Employer_Stream_EN.csv",
-        "_Positive_Employer_EN.csv",
-        "_Positive_Employer_EN.csv",
-        "_Positive_Employer_EN.csv",
-        "_Positive_EN.csv",
-        "_employer_positive_EN.csv",
-        "_Positive_EN.csv",
-        "TFWP_",
-    ]
-    for i in r:
-        f = f.replace(i, "")
+    found = re.search("\d{4}", f)
+    if found:
+        return found.group(0)
     return "{}".format(f)
 
 def str_dec(x): 

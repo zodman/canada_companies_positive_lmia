@@ -19,7 +19,7 @@ start:
     red "Remove shit"
     sed -i.orig.orig 1d *.csv
     # sed -i.orig.orig 1d 2015_Positive_Employers_EN.csv
-    rm 2015_positive_employers_en.csv*
+    rm -f 2015_positive_employers_en.csv*
 
 fillempty:
     set -xe
